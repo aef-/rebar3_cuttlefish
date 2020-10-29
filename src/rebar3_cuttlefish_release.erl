@@ -4,7 +4,8 @@
 -export([init/1
         ,do/1
         ,format_error/1
-        ,supported_options/0]).
+        ,supported_options/0
+        ,do_build/2]).
 
 -define(PROVIDER, release).
 -define(NAMESPACE, default).
@@ -98,9 +99,11 @@ do(State) ->
 
     StartHookState = maybe_set_startup_hook(DisableCFRelScripts, State),
     State1 = rebar_state:set(State, relx, lists:keydelete(overlay, 1, Relx) ++
-                                 [{generate_start_script, DisableCFRelScripts},
+                                 [{sys_config, false},
+                                  {vm_args, false},
+                                  {generate_start_script, DisableCFRelScripts},
                                   {overlay, Overlays3} | StartHookState]),
-    Res = rebar_prv_release:do(State1),
+    Res = do_build(?PROVIDER, State1),
     SchemaGlob = filename:join([TargetDir, "share", "schema", "*.schema"]),
     ReleaseSchemas = filelib:wildcard(SchemaGlob),
 
@@ -229,4 +232,10 @@ supported_options() ->
     relx:opt_spec_list()
   catch _:undef ->
       rebar_relx:opt_spec_list()
+  end.
+
+do_build(Provider, State) ->
+  try rebar_relx:do(Provider, State)
+  catch _:undef ->
+    rebar_relx:do(rlx_prv_release, atom_to_list(Provider), Provider, State)
   end.
