@@ -24,6 +24,7 @@ case $CUTTLE_CONF_STATUS in
         export RELX_VMARGS_PATH=$RUNNER_GEN_DIR/vm.args
         ln -sf $CONFIG_PATH $RELX_CONFIG_PATH
         ln -sf $VMARGS_PATH $RELX_VMARGS_PATH
+        CUTTLE_CONF="$(< "$CUTTLE_CONF_TMP")"
         ;;
     *)
         echo "Cuttlefish failed! Oh no!:"
