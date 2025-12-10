@@ -1,7 +1,7 @@
 rebar3_cuttlefish
 =====
 
-![Rebar3 Cuttlefish Plugin OpenRiak Status](https://github.com/OpenRiak/rebar3_cuttlefish/actions/workflows/erlang.yml/badge.svg?branch=openriak-3.2)
+![Rebar3 Cuttlefish Plugin OpenRiak Status](https://github.com/OpenRiak/rebar3_cuttlefish/actions/workflows/erlang.yml/badge.svg?branch=openriak-3.4)
 
 This plugin provides cuttlefish and automatically updates the release configuration at runtime to utilize cuttlefish. There is no need to add schema files to the relx overlay, copy the cuttlefish escript or create a custom start script, it is all handled by the plugin provider.
 
