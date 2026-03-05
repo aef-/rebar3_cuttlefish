@@ -18,8 +18,13 @@ $CUTTLEFISHCMD -e $RUNNER_ETC_DIR -d $RUNNER_GEN_DIR/generated.conf -s $RUNNER_S
 
 case $CUTTLE_CONF_STATUS in
     0)
-        export CONFIG_PATH=$(sed -E 's/.*-config ([^ ]+).*/\1/' "$CUTTLE_CONF_TMP")
-        export VMARGS_PATH=$(sed -E 's/.*-vm_args ([^ ]+).*/\1/' "$CUTTLE_CONF_TMP")
+        export CONFIG_PATH=$(sed -n -E 's/.*-config[[:space:]]+([^[:space:]]+).*/\1/p' "$CUTTLE_CONF_TMP" | tail -n 1)
+        export VMARGS_PATH=$(sed -n -E 's/.*-vm_args[[:space:]]+([^[:space:]]+).*/\1/p' "$CUTTLE_CONF_TMP" | tail -n 1)
+        if [ -z "$CONFIG_PATH" ] || [ -z "$VMARGS_PATH" ]; then
+            echo "Cuttlefish did not emit -config/-vm_args paths; output:"
+            cat "$CUTTLE_CONF_TMP"
+            exit 1
+        fi
         export RELX_CONFIG_PATH=$RUNNER_GEN_DIR/sys.config
         export RELX_VMARGS_PATH=$RUNNER_GEN_DIR/vm.args
         ln -sf $CONFIG_PATH $RELX_CONFIG_PATH
